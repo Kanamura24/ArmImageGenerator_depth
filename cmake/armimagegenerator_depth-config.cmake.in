@@ -1,0 +1,54 @@
+# ArmImageGenerator_depth CMake config file
+#
+# This file sets the following variables:
+# ArmImageGenerator_depth_FOUND - Always TRUE.
+# ArmImageGenerator_depth_INCLUDE_DIRS - Directories containing the ArmImageGenerator_depth include files.
+# ArmImageGenerator_depth_IDL_DIRS - Directories containing the ArmImageGenerator_depth IDL files.
+# ArmImageGenerator_depth_LIBRARIES - Libraries needed to use ArmImageGenerator_depth.
+# ArmImageGenerator_depth_DEFINITIONS - Compiler flags for ArmImageGenerator_depth.
+# ArmImageGenerator_depth_VERSION - The version of ArmImageGenerator_depth found.
+# ArmImageGenerator_depth_VERSION_MAJOR - The major version of ArmImageGenerator_depth found.
+# ArmImageGenerator_depth_VERSION_MINOR - The minor version of ArmImageGenerator_depth found.
+# ArmImageGenerator_depth_VERSION_REVISION - The revision version of ArmImageGenerator_depth found.
+# ArmImageGenerator_depth_VERSION_CANDIDATE - The candidate version of ArmImageGenerator_depth found.
+
+message(STATUS "Found ArmImageGenerator_depth-@PROJECT_VERSION@")
+set(ArmImageGenerator_depth_FOUND TRUE)
+
+find_package(<dependency> REQUIRED)
+
+#set(ArmImageGenerator_depth_INCLUDE_DIRS
+#    "@CMAKE_INSTALL_PREFIX@/include/@PROJECT_NAME_LOWER@-@PROJECT_VERSION_MAJOR@"
+#    ${<dependency>_INCLUDE_DIRS}
+#    )
+#
+#set(ArmImageGenerator_depth_IDL_DIRS
+#    "@CMAKE_INSTALL_PREFIX@/include/@PROJECT_NAME_LOWER@-@PROJECT_VERSION_MAJOR@/idl")
+set(ArmImageGenerator_depth_INCLUDE_DIRS
+    "@CMAKE_INSTALL_PREFIX@/include/@CPACK_PACKAGE_FILE_NAME@"
+    ${<dependency>_INCLUDE_DIRS}
+    )
+set(ArmImageGenerator_depth_IDL_DIRS
+    "@CMAKE_INSTALL_PREFIX@/include/@CPACK_PACKAGE_FILE_NAME@/idl")
+
+
+if(WIN32)
+    set(ArmImageGenerator_depth_LIBRARIES
+        "@CMAKE_INSTALL_PREFIX@/@LIB_INSTALL_DIR@/@CMAKE_SHARED_LIBRARY_PREFIX@@PROJECT_NAME_LOWER@@CMAKE_STATIC_LIBRARY_SUFFIX@"
+        ${<dependency>_LIBRARIES}
+        )
+else(WIN32)
+    set(ArmImageGenerator_depth_LIBRARIES
+        "@CMAKE_INSTALL_PREFIX@/@LIB_INSTALL_DIR@/@CMAKE_SHARED_LIBRARY_PREFIX@@PROJECT_NAME_LOWER@@CMAKE_SHARED_LIBRARY_SUFFIX@"
+        ${<dependency>_LIBRARIES}
+        )
+endif(WIN32)
+
+set(ArmImageGenerator_depth_DEFINITIONS ${<dependency>_DEFINITIONS})
+
+set(ArmImageGenerator_depth_VERSION @PROJECT_VERSION@)
+set(ArmImageGenerator_depth_VERSION_MAJOR @PROJECT_VERSION_MAJOR@)
+set(ArmImageGenerator_depth_VERSION_MINOR @PROJECT_VERSION_MINOR@)
+set(ArmImageGenerator_depth_VERSION_REVISION @PROJECT_VERSION_REVISION@)
+set(ArmImageGenerator_depth_VERSION_CANDIDATE @PROJECT_VERSION_CANDIDATE@)
+
