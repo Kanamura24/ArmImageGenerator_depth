@@ -32,7 +32,7 @@ static const char* armimagegenerator_depth_spec[] =
     "type_name",         "ArmImageGenerator_depth",
     "description",       "Arm Image Generator RT Component(+depth)",
     "version",           "1.0.0",
-    "vendor",            "momo",
+    "vendor",            "kanamura",
     "category",          "Experimental",
     "activity_type",     "PERIODIC",
     "kind",              "DataFlowComponent",
