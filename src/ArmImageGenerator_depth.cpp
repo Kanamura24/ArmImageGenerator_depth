@@ -240,8 +240,8 @@ RTC::ReturnCode_t ArmImageGenerator_depth::onActivated(RTC::UniqueId ec_id)
  	*/
      std::string filename = m_logDir + "/joints.csv";
  	m_JointLog.open(filename.c_str(), std::ios::out);//, std::ofstream::out);
-
- 	m_JointLog << "x, y, theta, ImageFilename" << std::endl;
+    
+ 	m_JointLog << "x, y, theta, ImageFilename, Depthimage" << std::endl;
 
   return RTC::RTC_OK;
 }
@@ -372,9 +372,10 @@ RTC::ReturnCode_t ArmImageGenerator_depth::onExecute(RTC::UniqueId ec_id)
   
   if (channels == 3)
     m_buffer.create(height, width, CV_8UC3);
+  
   else
     m_buffer.create(height, width, CV_8UC1);
-  
+    
   long data_length = m_rgbdCameraImage.data.cameraImage.image.raw_data.length();
 
   //long image_size = width * height * channels;
@@ -402,10 +403,26 @@ RTC::ReturnCode_t ArmImageGenerator_depth::onExecute(RTC::UniqueId ec_id)
   }
   
   cv::imwrite(m_logDir + "/" + filename, m_buffer);
-  
+
 #endif  
 
-  m_JointLog << x << ", " << y << ", " << th << ", " << filename << std::endl;
+  m_JointLog << x << ", " << y << ", " << th << ", " << filename << ", ";
+
+
+
+  FILE *fp;
+  
+  long d_width = m_rgbdCameraImage.data.depthImage.width;
+  long d_height = m_rgbdCameraImage.data.depthImage.height;
+  long size = d_width * d_height;
+  
+  if((fp=fopen("joints.csv","w"))!=NULL){
+    for(int i=0; i<size; ++i){
+      fprintf(fp, "%f",m_rgbdCameraImage.data.depthImage.raw_data[i]);
+    }
+    fprintf(fp, "\n"); 
+    fclose(fp);
+  }
 
 
   std::cout << "[ArmImageGenerator] Ready" << std::endl;
