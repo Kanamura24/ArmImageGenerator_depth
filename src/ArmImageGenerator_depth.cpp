@@ -240,8 +240,13 @@ RTC::ReturnCode_t ArmImageGenerator_depth::onActivated(RTC::UniqueId ec_id)
  	*/
      std::string filename = m_logDir + "/joints.csv";
  	m_JointLog.open(filename.c_str(), std::ios::out);//, std::ofstream::out);
+
+    std::string name = m_logDir + "/depth.csv";
+    m_DepthLog.open(name.c_str(), std::ios::out);
     
- 	m_JointLog << "x, y, theta, ImageFilename, Depthimage" << std::endl;
+ 	m_JointLog << "x, y, theta, ImageFilename, DepthImgFilename" << std::endl;
+
+    m_DepthLog << "DepthData(480*360)" << std::endl;
 
   return RTC::RTC_OK;
 }
@@ -260,6 +265,10 @@ RTC::ReturnCode_t ArmImageGenerator_depth::onDeactivated(RTC::UniqueId ec_id)
 
  	coil::TimeValue tv(3.0);
  	coil::sleep(tv);
+
+
+    //FILE *fp;
+    //fclose(fp);
 
  	m_manipCommon->servoOFF();
     return RTC::RTC_OK;
@@ -406,25 +415,20 @@ RTC::ReturnCode_t ArmImageGenerator_depth::onExecute(RTC::UniqueId ec_id)
 
 #endif  
 
-  m_JointLog << x << ", " << y << ", " << th << ", " << filename << ", ";
-
-
-
-  FILE *fp;
+  m_JointLog << x << ", " << y << ", " << th << ", " << filename << ", depth_" << filename << std::endl;
   
   long d_width = m_rgbdCameraImage.data.depthImage.width;
   long d_height = m_rgbdCameraImage.data.depthImage.height;
   long size = d_width * d_height;
-  
-  if((fp=fopen("joints.csv","w"))!=NULL){
-    for(int i=0; i<size; ++i){
-      fprintf(fp, "%f",m_rgbdCameraImage.data.depthImage.raw_data[i]);
-    }
-    fprintf(fp, "\n"); 
-    fclose(fp);
+
+
+  m_DepthLog << "[" ;
+  for(int i=0; i<size; ++i){
+    m_DepthLog << m_rgbdCameraImage.data.depthImage.raw_data[i] << ",";
   }
-
-
+  m_DepthLog << "]" << std::endl;
+  
+  
   std::cout << "[ArmImageGenerator] Ready" << std::endl;
   m_jointPos[0] = 0;
   m_jointPos[1] = 0;
@@ -448,7 +452,7 @@ RTC::ReturnCode_t ArmImageGenerator_depth::onExecute(RTC::UniqueId ec_id)
   std::cout << "[ArmImageGenerator] Hold" << std::endl;
 
   double ratio = m_gripper_close_ratio > 1.0 ? 1.0 : m_gripper_close_ratio < 0.0 ? 0 : m_gripper_close_ratio;
-  ret1 = m_manipMiddle->moveGripper(100 * m_gripper_close_ratio);
+  ret1 = m_manipMiddle->moveGripper(100 * ratio);//m_gripper_close_ratio);
   //ret1 = m_manipMiddle->moveGripper(10);
   coil::sleep(m_sleepTime);
 
