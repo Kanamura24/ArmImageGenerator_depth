@@ -358,7 +358,11 @@ class ArmImageGenerator_depth
 
 	 std::ofstream m_JointLog;
 
+  	 std::ofstream m_DepthLog;
+  
 	 std::string m_logDir;
+
+     float  m_depth;
 
 };
 
